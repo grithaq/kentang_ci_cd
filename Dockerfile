@@ -4,6 +4,9 @@ FROM bitnami/python:3.9
 # Set the working directory
 WORKDIR /app
 
+# Install necessary packages for user and group management
+RUN install_packages shadow
+
 # Create a non-root user and group with matching UID and GID to the host user
 ARG USER_ID
 ARG GROUP_ID
