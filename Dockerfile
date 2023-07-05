@@ -1,11 +1,12 @@
 # Use the Bitnami Python base image
 FROM bitnami/python:3.9
+FROM ubuntu:latest
 
 # Set the working directory
 WORKDIR /app
 
 # Install necessary packages for user and group management
-RUN install_packages shadow
+RUN apt-get update && apt-get install -y shadow
 
 # Create a non-root user and group with matching UID and GID to the host user
 ARG USER_ID
