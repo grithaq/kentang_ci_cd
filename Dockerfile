@@ -1,22 +1,20 @@
 # Use the Bitnami Python base image
 FROM bitnami/python:3.9
-# Update the package list, install sudo, create a non-root user, and grant password-less sudo permissions
-FROM ubuntu
-
-ARG UID
-ARG GID
-
-RUN apt update && \
-    apt install -y sudo && \
-    addgroup --gid $GID nonroot && \
-    adduser --uid $UID --gid $GID --disabled-password --gecos "" nonroot && \
-    echo 'nonroot ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
-
-# Set the non-root user as the default user
-USER nonroot
 
 # Set the working directory
 WORKDIR /app
+
+# Create a non-root user and group with matching UID and GID to the host user
+ARG USER_ID
+ARG GROUP_ID
+RUN groupadd -g $GROUP_ID myuser && \
+    useradd -u $USER_ID -g $GROUP_ID -ms /bin/bash myuser
+
+# Set password-less sudo permissions for the non-root user
+RUN echo "myuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+# Switch to the non-root user
+USER myuser
 
 # Copy the requirements file
 COPY requirements.txt .
@@ -25,8 +23,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
-COPY --chown=nonroot:nonroot . /app
-RUN chmod -R 755 /app
+COPY . /app
 
 # Expose the necessary port (if applicable)
 EXPOSE 8000
