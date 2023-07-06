@@ -5,10 +5,6 @@ FROM ubuntu:latest
 # Set the working directory
 WORKDIR /app
 
-# Install necessary packages for user and group management
-RUN apt-get update && apt-get install -y shadow
-
-
 # Copy the requirements file
 COPY requirements.txt .
 
