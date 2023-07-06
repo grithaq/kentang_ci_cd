@@ -8,17 +8,6 @@ WORKDIR /app
 # Install necessary packages for user and group management
 RUN apt-get update && apt-get install -y shadow
 
-# Create a non-root user and group with matching UID and GID to the host user
-ARG USER_ID
-ARG GROUP_ID
-RUN groupadd -g $GROUP_ID myuser && \
-    useradd -u $USER_ID -g $GROUP_ID -ms /bin/bash myuser
-
-# Set password-less sudo permissions for the non-root user
-RUN echo "myuser ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-
-# Switch to the non-root user
-USER myuser
 
 # Copy the requirements file
 COPY requirements.txt .
@@ -31,6 +20,10 @@ COPY . /app
 
 # Expose the necessary port (if applicable)
 EXPOSE 8000
+
+RUN useradd -u 8877 john
+
+USER jhon
 
 # Set the command to run the FastAPI app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
