@@ -17,9 +17,9 @@ COPY . /app
 # Expose the necessary port (if applicable)
 EXPOSE 8000
 
-RUN useradd -u 8877 john
+RUN useradd -u 1001 nonroot
 
-USER john
+USER nonroot
 
 # Set the command to run the FastAPI app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
