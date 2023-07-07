@@ -19,7 +19,7 @@ EXPOSE 8000
 
 RUN useradd -u 8877 john
 
-USER jhon
+USER john
 
 # Set the command to run the FastAPI app
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
